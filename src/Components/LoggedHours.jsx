@@ -8,16 +8,17 @@ function LoggedHours(projectData) {
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
-    const filteredRows = projectData.projectData.filter(row =>
-      (statusFilter.length === 0 || statusFilter.includes(row.status)) &&
-      (projectFilter.length === 0 || projectFilter.includes(row.projectname))
+    const filteredRows = projectData.projectData.filter(
+      (row) =>
+        (statusFilter.length === 0 || statusFilter.includes(row.status)) &&
+        (projectFilter.length === 0 || projectFilter.includes(row.projectname))
     );
     setFilteredData(filteredRows);
   }, [statusFilter, projectFilter, projectData]);
 
   const handleSubmittedClick = () => {
     if (statusFilter.includes("Submitted")) {
-      setStatusFilter(statusFilter.filter(status => status !== "Submitted"));
+      setStatusFilter(statusFilter.filter((status) => status !== "Submitted"));
     } else {
       setStatusFilter([...statusFilter, "Submitted"]);
     }
@@ -25,7 +26,7 @@ function LoggedHours(projectData) {
 
   const handleApprovedClick = () => {
     if (statusFilter.includes("Approved")) {
-      setStatusFilter(statusFilter.filter(status => status !== "Approved"));
+      setStatusFilter(statusFilter.filter((status) => status !== "Approved"));
     } else {
       setStatusFilter([...statusFilter, "Approved"]);
     }
@@ -33,29 +34,49 @@ function LoggedHours(projectData) {
 
   const handleRejectedClick = () => {
     if (statusFilter.includes("Rejected")) {
-      setStatusFilter(statusFilter.filter(status => status !== "Rejected"));
+      setStatusFilter(statusFilter.filter((status) => status !== "Rejected"));
     } else {
       setStatusFilter([...statusFilter, "Rejected"]);
     }
   };
 
-  const handleProjectClick = project => {
+  const handleProjectClick = (project) => {
     if (projectFilter.includes(project)) {
-      setProjectFilter(projectFilter.filter(proj => proj !== project));
+      setProjectFilter(projectFilter.filter((proj) => proj !== project));
     } else {
       setProjectFilter([...projectFilter, project]);
     }
   };
 
+  const handleEditClick = (index) => {
+    const editedData = [...filteredData];
+    editedData[index].isEditing = true;
+    setFilteredData(editedData);
+  };
+
+  const handleHourChange = (event, index) => {
+    const editedData = [...filteredData];
+    editedData[index].hrsworked = event.target.value;
+    setFilteredData(editedData);
+  };
+
+  const handleKeyDown = (event, index) => {
+    if (event.key === "Enter") {
+      handleSaveClick(index);
+    }
+  };
+
+  const handleSaveClick = (index) => {
+    const editedData = [...filteredData];
+    editedData[index].isEditing = false;
+    setFilteredData(editedData);
+
+    console.log("Edited Hour:", editedData[index].hrsworked);
+  };
+
   return (
-    <section
-      className="p-8 dark:bg-black h-full w-screen"
-      onClick={() => {
-        setOpenStatus(false);
-        setOpenProject(false);
-      }}
-    >
-        <h1 className="mb-4 text-3xl font-extrabold text-gray-900 ">
+    <section className="p-8 dark:bg-black h-full w-screen">
+      <h1 className="mb-4 text-3xl font-extrabold text-gray-900 ">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 ">
           Logged Hours
         </span>
@@ -158,7 +179,6 @@ function LoggedHours(projectData) {
             </ul>
           </div>
         </div>
-
 
         <div className="relative pb-6">
           <button
@@ -290,7 +310,44 @@ function LoggedHours(projectData) {
                   {row.projectname}
                 </th>
                 <td className="px-6 py-3">{row.wbsname}</td>
-                <td className="px-6 py-3">{row.hrsworked}</td>
+                <td className="px-6 py-3 flex">
+                  {row.isEditing ? (
+                    <input
+                      type="time"
+                      value={row.hrsworked}
+                      onChange={(event) => handleHourChange(event, index)}
+                      onKeyDown={(event) => handleKeyDown(event, index)}
+                      className="border rounded px-2 py-1 focus:outline-none bg-gray-100 dark:bg-gray-800"
+                    />
+                  ) : (
+                    <>
+                      {row.hrsworked}
+
+                      {row.status !== "Approved" && (
+                        <button
+                          className="ml-2 flex flex-row justify-center items-center gap-1 text-blue-600 hover:underline focus:outline-none"
+                          onClick={() => handleEditClick(index)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-3 h-3"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                            />
+                          </svg>
+                          <span className="text-xs">Edit</span>
+                        </button>
+                      )}
+                    </>
+                  )}
+                </td>
                 <td className="px-6 py-3">{row.dateworked}</td>
                 <td className="px-6 py-3">{row.status}</td>
               </tr>
