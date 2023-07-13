@@ -827,7 +827,12 @@ function App() {
   ]
 
   return (
-    <main className="h-screen">
+    <main className="">
+      <h1 className="px-8 bg-black pt-8 text-3xl font-extrabold text-gray-900 ">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 ">
+          Logged Hours
+        </span>
+      </h1>
       <LoggedHours projectData={projectData} />
     </main>
   );

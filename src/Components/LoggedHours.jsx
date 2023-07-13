@@ -75,12 +75,7 @@ function LoggedHours(projectData) {
   };
 
   return (
-    <section className="p-8 dark:bg-black h-full w-screen">
-      <h1 className="mb-4 text-3xl font-extrabold text-gray-900 ">
-        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 ">
-          Logged Hours
-        </span>
-      </h1>
+    <section className="p-8 dark:bg-black">
       <div className="flex gap-6">
         <div className="relative pb-6">
           <button
@@ -215,6 +210,9 @@ function LoggedHours(projectData) {
             className={` ${
               openProject ? "" : "hidden"
             } z-10 top-14 absolute w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600`}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           >
             <ul
               className="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200"
@@ -276,7 +274,7 @@ function LoggedHours(projectData) {
         </div>
       </div>
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg h-full no-scrollbar">
+      <div className="relative h-[calc(100vh-196px)] no-scrollbar overflow-scroll shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -297,7 +295,7 @@ function LoggedHours(projectData) {
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody >
             {filteredData.map((row, index) => (
               <tr
                 key={index}
