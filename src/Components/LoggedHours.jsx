@@ -295,7 +295,7 @@ function LoggedHours(projectData) {
               </th>
             </tr>
           </thead>
-          <tbody >
+          <tbody>
             {filteredData.map((row, index) => (
               <tr
                 key={index}
@@ -347,7 +347,20 @@ function LoggedHours(projectData) {
                   )}
                 </td>
                 <td className="px-6 py-3">{row.dateworked}</td>
-                <td className="px-6 py-3">{row.status}</td>
+                <td className="px-6 py-3">
+                  <div class="flex items-center">
+                    <div
+                      class={`h-2.5 w-2.5 rounded-full ${
+                        row.status === "Approved"
+                          ? "bg-green-500"
+                          : row.status === "Rejected"
+                          ? "bg-red-500"
+                          : "bg-yellow-500"
+                      } mr-2`}
+                    ></div>{" "}
+                    {row.status}
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
