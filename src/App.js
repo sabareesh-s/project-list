@@ -1,7 +1,24 @@
 import "./App.css";
 import LoggedHours from "./Components/LoggedHours";
+import { useState, useEffect } from 'react'
 
 function App() {
+
+  function getInitialTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme ? savedTheme : 'dark';
+  }
+
+  const [mode, setMode] = useState(getInitialTheme);
+
+  useEffect(() => {
+    window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', event => {
+        const colorScheme = event.matches ? "dark" : "light";
+        console.log(colorScheme);
+        setMode(colorScheme);
+      });
+  }, []);
 
   const projectData=[
     {
@@ -828,11 +845,19 @@ function App() {
 
   return (
     <main className="">
-      <h1 className="px-8 bg-black pt-8 text-3xl font-extrabold text-gray-900 ">
-        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 ">
-          Logged Hours
-        </span>
-      </h1>
+      <nav class="bg-white border-gray-200 dark:bg-gray-900">
+        <div class="flex flex-wr  ap justify-between items-center px-8 py-[18px]">
+            <a href="" class="flex items-center">
+                {mode === 'light' && <img src='https://i.imgur.com/1DKWGzB.png' class="h-8 mr-3" alt="Logo" />}
+                {mode === 'dark' &&  <img src='https://i.imgur.com/3HsPeu2.png' class="h-8 mr-3" alt="Logo" />}
+            </a>
+            <div class="flex items-center">
+                <a href="#" class="mr-6 text-sm  text-gray-500 dark:text-white hover:underline">About</a>
+                <a href="#" class="text-sm  text-blue-600 dark:text-blue-500 hover:underline">Login</a>
+            </div>
+        </div>
+    </nav>
+
       <LoggedHours projectData={projectData} />
     </main>
   );
